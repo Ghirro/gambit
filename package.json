@@ -4,7 +4,9 @@
   "description": "A hyper-thin library to help building API driven redux apps",
   "main": "dist/index.js",
   "scripts": {
-    "test": "mocha --require ./tests/setup.js  --compilers js:babel-register --recursive tests/unit"
+    "test": "mocha --require ./tests/setup.js  --compilers js:babel-register --recursive tests/unit",
+    "compile": "babel -d dist/ src/",
+    "prepublish": "npm run compile"
   },
   "keywords": [
     "Redux",
