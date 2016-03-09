@@ -1,0 +1,4 @@
+parser: babel-eslint
+extends: eslint-config-lens
+rules:
+  arrow-body-style: 0
