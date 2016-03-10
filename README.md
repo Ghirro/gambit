@@ -47,8 +47,6 @@ const AllUsersListContainer = export createContainer(AllUsersList, {
 
 You don't have to deal with `@connect`, `mapStateToProps`, `componentWill...` or any other life-cycle hooks. The container will getAllUsers when the Redux store has none and whilst doing it will display a loading spinner. If it fails then you'll get a helpful error page.
 
-(NB: There is also a `done()` property that you can add but by default it will render the contained component when done.
-
 It'll also deal with when you're Component needs to create actions:
 
 ```javascript
@@ -73,6 +71,8 @@ Gambit is built on top of Redux so it's setup requires creating a Redux store an
 ## What Else?
 
 Gambit provides a number of other helper libraries to make creating ActionCreators, Constants and Reducers much easier and boilerplate free.
+
+Check out the [guide](https://ghirro.gitbooks.io/getting-started-with-gambit/content/).
 
 ### ActionCreators
 
@@ -146,13 +146,7 @@ import userReducer from './reducers/user.js';
 import { createStore, combineReducers, compose, applyMiddleware } from 'redux';
 import { GambitApi, createMiddleware } from 'gambit';
 import { Provider } from 'react-redux';
-
-const myApi = new GambitApi({
-  users: {
-    getAllUsers() { return this.get('/getAllUsers'); },
-    addUser({ userId }) { return this.post(`/addUser/${userId}`); },
-  },
-}, 'http://api.mywebsite.com');
+import myApi from './api';
 
 // Create react-router-redux middleware here
 const gambitMiddleware = createMiddleware(myApi);
