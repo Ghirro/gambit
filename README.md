@@ -172,6 +172,6 @@ I know. I'll be updating them with a link to a more thorough guide and API docum
 
 I'd like to thank the following people:
 
-* (Paolo Moretti)[https://github.com/moretti] - A really good programmer and bloke
-* (James Hollingworth)[https://github.com/jhollingworth] - Creator of MartyJS from which a lot of the Gambit API takes inspiration
-* (Jim O'Brien)[https://github.com/jimmed] - Helped with API design suggestions.
+* [Paolo Moretti](https://github.com/moretti) - A really good programmer and bloke
+* [James Hollingworth](https://github.com/jhollingworth) - Creator of MartyJS from which a lot of the Gambit API takes inspiration
+* [Jim O'Brien](https://github.com/jimmed) - Helped with API design suggestions.
