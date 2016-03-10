@@ -8,13 +8,13 @@ npm install gambit
 
 ## Why?
 
-Redux is a fantastic tool for managing state within a javascript application, however it is naturally a low-level interface. This is great but when building API driven applications, it can become quite boilerplate intensive and the APIs for connecting a component to a store and then fetching data can lead to quite a lot of repetition across a medium sized application.
+Redux is a fantastic tool for managing state within a javascript application, however it is naturally a low-level interface. This is great but when building API driven applications, it can become quite boilerplate intensive and the APIs for connecting a component to a store and then fetching data can lead to quite a lot of repetition.
 
 Doubly so when you're also trying to keep track of what's loading and what's failed to load.
 
 # What does it do?
 
-Gambit provides a very simple way to create container components that need to interact with an API. It does so in a way that uses the power of the redux store whilst being much quicker and easier to implement.
+Gambit provides a very simple way to create container components that need to interact with an API. It does so in a way that uses the power of the redux store whilst allowing you to build remote-data-dependent UIs quicker.
 
 Because it's built on Redux, you can still use the entire Redux ecosystem alongside it whether that's `react-router-redux` or `redux-dev-tools` etc.
 
