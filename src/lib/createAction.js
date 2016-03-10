@@ -66,7 +66,7 @@ export function createStagedAction(
       badMadeId(madeId),
     );
 
-    const calls = state().gambits;
+    const calls = state().gambit;
     if (calls) {
       const shouldGoAhead = actionBlocker ?
         actionBlocker(calls.getIn(['lastCalled', madeId])) :

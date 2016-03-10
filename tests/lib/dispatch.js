@@ -3,7 +3,7 @@ import Constants from '../../src/lib/GeneralConstants';
 
 function initialState() {
   return {
-    gambits: new Map({
+    gambit: new Map({
       lastCalled: new Map({}),
     }),
   };
@@ -18,7 +18,7 @@ export default function dispatchCreator(api) {
       const internalDispatcher = dispatchObj => {
         if (dispatchObj.type === Constants.ACTION_CALLED) {
           ids.push(dispatchObj.action);
-          state.gambits = state.gambits.setIn(['lastCalled', dispatchObj.action], Date.now());
+          state.gambit = state.gambit.setIn(['lastCalled', dispatchObj.action], Date.now());
         }
         stack.push(dispatchObj);
       };
