@@ -1,4 +1,4 @@
-# Gambit
+# Gambit [Example App](https://github.com/Ghirro/gambit-github-example) | [Guide](https://ghirro.gitbooks.io/getting-started-with-gambit/content/)
 
 Gambit is a hyper-thin library designed to make building API driven apps with Redux/React easier. It is not a Redux replacement, it is a library built on top of Redux.
 
@@ -183,3 +183,4 @@ I'd like to thank the following people:
 * [Paolo Moretti](https://github.com/moretti) - A really good programmer and bloke
 * [James Hollingworth](https://github.com/jhollingworth) - Creator of MartyJS from which a lot of the Gambit API takes inspiration
 * [Jim O'Brien](https://github.com/jimmed) - Helped with API design suggestions.
+* [Dan Abramov](https://github.com/gaearon) - Created Redux which powers these whole shenanigans.
