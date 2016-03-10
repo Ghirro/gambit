@@ -3,6 +3,7 @@ import mapValues from 'lodash/mapValues';
 import HttpError from './HttpError';
 import invariant from 'invariant';
 import isPlainObject from 'lodash/isPlainObject';
+import url from 'url';
 
 import {
   badApiArgs,
@@ -13,8 +14,8 @@ export default class GambitApi {
   constructor(endpoints, baseUrl) {
     this.endpoints = endpoints;
     this.baseUrl = baseUrl;
-    this.fetch = async (url, rest) => {
-      const fetchVal = await fetch(url, rest);
+    this.fetch = async (apiUrl, rest) => {
+      const fetchVal = await fetch(apiUrl, rest);
       if (!fetchVal.ok) {
         throw new HttpError(`Invalid HTTP response, status ${fetchVal.status}`, { body: fetchVal });
       }
@@ -33,14 +34,15 @@ export default class GambitApi {
     });
   }
 
-  _request = type => async ({ url, ...rest }) => {
-    if (!url) throw new Error('No URL given in API Call');
+  _request = type => async ({ url: apiUrl, ...rest }) => {
+    if (!apiUrl) throw new Error('No URL given in API Call');
     rest.method = type;
     rest.headers = {
       ...rest.headers,
       ...this.extraHeaders,
     };
-    const response = await this.fetch(url, rest);
+    apiUrl = url.resolve(this.baseUrl, apiUrl);
+    const response = await this.fetch(apiUrl, rest);
     return { body: response };
   };
 
