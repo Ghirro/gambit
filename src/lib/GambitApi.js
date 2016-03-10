@@ -3,7 +3,6 @@ import mapValues from 'lodash/mapValues';
 import HttpError from './HttpError';
 import invariant from 'invariant';
 import isPlainObject from 'lodash/isPlainObject';
-import fetch from 'node-fetch';
 
 import {
   badApiArgs,
