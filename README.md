@@ -1,102 +1,177 @@
 # Gambit
 
-Gambit is a hyper-thin library designed to make building API driven apps with Redux/React easier.
+Gambit is a hyper-thin library designed to make building API driven apps with Redux/React easier. It is not a Redux replacement, it is a library built on top of Redux.
 
-## Another JS/React thing?
+## Why?
 
-Listen, I know. Javascript burnout yada yada yada. The idea behind Gambit is that Redux is amazing but that it can be a little bit boilerplate intensive and low-level for a lot of use cases. This is especially true when building applications that really on almost continous API connectivity.
+Redux is a fantastic tool for managing state within a javascript application, however it is naturally a low-level interface. This is great but when building API driven applications, it can become quite boilerplate intensive and the APIs for connecting a component to a store and then fetching data can lead to quite a lot of repetition across a medium sized application.
 
-It aims to **augment** redux rather than replace it.
+Doubly so when you're also trying to keep track of what's loading and what's failed to load.
 
-## What does it do?
+# What does it do?
 
-Gambit exposes a number of helper libraries (all of which will work as a standalone addition to redux) to abstract some of reduxes low-level api. For instance, populating your app's store from an API in Redux can be a bit longwinded and a bit low-level, you're forced to use a lot of `@connect` and `switch`* and React component lifecycle hooks. With Gambit it's easy.
+Gambit provides a very simple way to build container components and declare and fetch it's local and remote data dependencies to ensure that you have an easy way to build API-connected components whilst still being able to use the entire Redux tool set and get as low-level as you want where you choose.
 
-# Key Features
+## Give me an example, you idiot!
 
-## Easy-as-Hell Container Components
+Okay okay, keep your hair on. Here's a quick example of something Gambit does very well, creating Container components.
 
 ```javascript
-// UserList.js
-export default function UserList({ users }) {
-  return (
-    {users.map(user => {
-      return <li>{user.get('name')}</li>;
-    })}
-  );
-}
-
-// UserListContainer.js
-import { createContainer } from 'gambit';
-import MyComponent from './MyComponent';
-import { getUsers } from './UserActions';
-
-export default createContainer(UserList, {
+const AllUsersListContainer = export createContainer(AllUsersList, {
   fetch: {
-    users: {
-      as: (state) => state.users.get('allUsers'),
+    allUsers: {
+      as: (state) => state.users.allUsers,
       grab: (dispatch) => asValue => {
-        if (asValue.count() === 0) return dispatch(getUsers());
+        if (asValue.length === 0) return dispatch(getAllUsers());
       }
-    }
+    },
+  },
+  pending() {
+    return <LoadingSpinner />;
+  },
+  failed() {
+    return <ErrorPage error="Fetching all users failed" />;
+  },
+});
+```
+
+You don't have to deal with `@connect`, `mapStateToProps`, `componentWill...` or any other life-cycle hooks. The container will getAllUsers when the Redux store has none and whilst doing it will display a loading spinner. If it fails then you'll get a helpful error page.
+
+(NB: There is also a `done()` property that you can add but by default it will render the contained component when done.
+
+It'll also deal with when you're Component needs to create actions:
+
+```javascript
+const AddUserButtonContainer = export createContainer(AddUserButton, {
+  methods: {
+    addUsers: dispatch => userId => dispatch(addUser({ userId })),
   }
 });
+
+// AddUserButton.js
+function AddUserButton({ userId, addUser }) {
+  return (
+    <Button onClick={() => addUser({ userId })}>Add User</Button>
+  );
+}
 ```
 
-And presto, you have a fully connected and contained components
+## What about Redux?
 
-## Really Quick Actions
+Gambit is built on top of Redux so it's setup requires creating a Redux store and it uses Redux behind the scenes. This leaves you free to continue to use all Redux plugins (`react-router-redux`, `redux-dev-tools` etc) whilst not having to deal with manually connecting everything to the store.
 
-99% of actions are largely just API calls that need to fire off events when they start, complete and fail. Gambit makes this super easy:
+## What Else?
+
+Gambit provides a number of other helper libraries to make creating ActionCreators, Constants and Reducers much easier and boilerplate free.
+
+### ActionCreators
+
+If you're fetching data from an API, you'll usually want your action creator to let you know when three things happen:
+
+* When the data is requested
+* When the fetch succeeds
+* When the fetch fails
+
+This allows you to build UIs that actually feel good for the user. This is all baked in to the Gambit ActionCreator flow and is as simple as:
 
 ```javascript
-// reducers/user.js
-import { createReducer } from 'gambit';
-import UserConstants from './constants/User';
-import { fromJS } from 'immutable';
-
-export default createReducer({
-  allUsers: [new Map({}), {
-    [UserConstants.GET_ALL_USERS_DONE]: ({
-      { body: users },
-    }) => fromJS(users),
-  }],
-
-  userFetchError: [false, {
-    [UserConstants.GET_ALL_USERS_FAILED]: ({ error }) => error,
-  }],
-
-  userFetching: [false, {
-    [UserConstants.GET_ALL_USERS_STARTING]: true,
-    [UserConstants.GET_ALL_USERS_FAILED + UserConstants.GET_ALL_USERS_DONE]: false,
-  }],
-});
-
-// actions/user.js
+import Constants from './constants';
 import { createStagedAction } from 'gambit';
-import UserConstants from './constants/User';
 
-export const getAllUsers = createStagedAction(UserConstants.GET_ALL_USERS, api => api.users.getUsers);
+export const getAllUsers = createStagedAction(
+  Constants.GET_ALL_USERS,
+  api => api.users.getAllUsers()
+);
 ```
 
-# Simple API Factory
-...document tomorrow
+When you call `dispatch(getAllUsers())` from somewhere in your app (presumably a container component), `api.users.getAllUsers` is called and you can add in reducer updates for `GET_ALL_USERS_STARTING`, `GET_ALL_USERS_DONE` and `GET_ALL_USERS_FAILED`. You'll also receive any arguments that were passed to the dispatch.
 
-# Easy Reducers
-...document tomorrow
+### Reducers
 
-# Sensible Middleware
-...document tomorrow
+Creating reducers with Gambit is very easy and doesn't need a lot of `switch`ing. To change state based on the action above for instance we may create a reducer that looks like this:
 
-# Constant Creation
-...document tomorrow
+```javascript
+import { createReducer } from 'gambit';
+import Constants from './constants';
 
-# Differences vs Marty
-...document tomorrow
+export default createReducer({
+  allUsers: [[], {
+    [Constants.GET_ALL_USERS_DONE]: ({
+      body: { users }
+    }, previousState) => [ ...previousState, ...users ],
+  }],
+});
+```
 
-# Action Blockers
-...document tomorrow
+What's more, because Gambit is creating Redux reducers, they sit happily alongside other redux reducers.
 
+```javascript
+import { routerReducer } from 'react-router-redux';
+import userReducer from './reducers/user.js';
+import { createStore, combineReducers } from 'redux';
 
-Roadmap:
-* Actually document stuff
+export default createStore(
+  combineReducers({ users: userReducer, routing: routerReducer })
+);
+```
+
+### Creating Constants
+
+Gambit provides a helper function to create all of the required constants for staged actions (DONE, STARTING etc).
+
+```javascript
+import { createConstants } from 'gambit';
+
+export default createConstants(['GET_ALL_USERS']);
+```
+
+### Middleware
+
+Setting up Gambit to use an API is very simple:
+
+```javascript
+import React from 'react';
+import { routerReducer } from 'react-router-redux';
+import userReducer from './reducers/user.js';
+import { createStore, combineReducers, compose, applyMiddleware } from 'redux';
+import { GambitApi, createMiddleware } from 'gambit';
+import { Provider } from 'react-redux';
+
+const myApi = new GambitApi({
+  users: {
+    getAllUsers() { return this.get('/getAllUsers'); },
+    addUser({ userId }) { return this.post(`/addUser/${userId}`); },
+  },
+}, 'http://api.mywebsite.com');
+
+// Create react-router-redux middleware here
+const gambitMiddleware = createMiddleware(myApi);
+const store = createStore(
+  combineReducers({ user: userReducer, routing: routerReducer }),
+  {},
+  compose(applyMiddleware(routerMiddleware, gambitMiddleware)),
+);
+
+class App extends React.Component {
+  render() {
+    return (
+      <Provider store={store}>
+        ...your application that is now connected to an API
+      </Provider>
+    )
+  }
+}
+render(<App />, document.getElementById('coolSite'));
+```
+
+## These Docs Suck
+
+I know. I'll be updating them with a link to a more thorough guide and API documentation soon. Possibly even some screencasts.
+
+## Thanks
+
+I'd like to thank the following people:
+
+* (Paolo Moretti)[https://github.com/moretti] - A really good programmer and bloke
+* (James Hollingworth)[https://github.com/jhollingworth] - Creator of MartyJS from which a lot of the Gambit API takes inspiration
+* (Jim O'Brien)[https://github.com/jimmed] - Helped with API design suggestions.
