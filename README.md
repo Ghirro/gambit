@@ -20,7 +20,7 @@ Because it's built on Redux, you can still use the entire Redux ecosystem alongs
 
 ## Give me an example, you idiot!
 
-Okay okay, keep your hair on. Here's a quick example of something Gambit does very well, creating Container components.
+Okay okay, keep your hair on. Check out the [example app](https://github.com/Ghirro/gambit-github-example). Alternatively, here's a quick example of something Gambit does very well, creating Container components.
 
 ```javascript
 const AllUsersListContainer = export createContainer(AllUsersList, {
