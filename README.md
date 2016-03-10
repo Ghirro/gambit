@@ -1,4 +1,6 @@
-# Gambit [Example App](https://github.com/Ghirro/gambit-github-example) | [Guide](https://ghirro.gitbooks.io/getting-started-with-gambit/content/)
+# Gambit
+
+[Example App](https://github.com/Ghirro/gambit-github-example) | [Guide](https://ghirro.gitbooks.io/getting-started-with-gambit/content/)
 
 Gambit is a hyper-thin library designed to make building API driven apps with Redux/React easier. It is not a Redux replacement, it is a library built on top of Redux.
 
