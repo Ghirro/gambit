@@ -2,6 +2,10 @@
 
 Gambit is a hyper-thin library designed to make building API driven apps with Redux/React easier. It is not a Redux replacement, it is a library built on top of Redux.
 
+```
+npm install gambit
+```
+
 ## Why?
 
 Redux is a fantastic tool for managing state within a javascript application, however it is naturally a low-level interface. This is great but when building API driven applications, it can become quite boilerplate intensive and the APIs for connecting a component to a store and then fetching data can lead to quite a lot of repetition across a medium sized application.
