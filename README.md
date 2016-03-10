@@ -14,7 +14,9 @@ Doubly so when you're also trying to keep track of what's loading and what's fai
 
 # What does it do?
 
-Gambit provides a very simple way to build container components and declare and fetch it's local and remote data dependencies to ensure that you have an easy way to build API-connected components whilst still being able to use the entire Redux tool set and get as low-level as you want where you choose.
+Gambit provides a very simple way to create container components that need to interact with an API. It does so in a way that uses the power of the redux store whilst being much quicker and easier to implement.
+
+Because it's built on Redux, you can still use the entire Redux ecosystem alongside it whether that's `react-router-redux` or `redux-dev-tools` etc.
 
 ## Give me an example, you idiot!
 
