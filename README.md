@@ -16,7 +16,7 @@ Redux is a fantastic tool for managing state within a javascript application, ho
 
 > The whole beauty of a library like Gambit is that it's just a set of helpers on top of an existing library. You're still using redux underneath, so if Gambit is too prescriptive for a particular edge case, you can just go back to vanilla Redux that one time. It's not sugar - more like icing.
 
-- [An Actual Developer](https://github.com/jimmed)
+> [An Actual Developer](https://github.com/jimmed)
 
 # What does it do?
 
