@@ -13,6 +13,7 @@ import createContainer from './lib/createContainer';
 import createReducer from './lib/createReducer';
 import GambitApi from './lib/GambitApi';
 import gambitReducer from './lib/gambitReducer';
+import HttpError from './lib/HttpError';
 
 export {
   hasNotBeenCalled,
@@ -26,4 +27,5 @@ export {
   createReducer,
   GambitApi,
   gambitReducer,
+  HttpError,
 };
