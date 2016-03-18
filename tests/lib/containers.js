@@ -65,6 +65,38 @@ export const BadGrabContainer = createContainer(BasicComponent, {
   },
 });
 
+export const FineGrabReturnContainer = createContainer(BasicComponent, {
+  fetch: {
+    first: {
+      as: () => null,
+      grab: () => () => false,
+    },
+    second: {
+      as: () => null,
+      grab: () => () => 'someVal', // If both return falsey then the grabs won't be run
+    },
+  },
+  failed(WrappedBasicComponent) {
+    return <WrappedBasicComponent {...this.props}>Failed</WrappedBasicComponent>;
+  },
+});
+
+export const BadGrabReturnContainer = createContainer(BasicComponent, {
+  fetch: {
+    first: {
+      as: () => null,
+      grab: () => () => undefined,
+    },
+    second: {
+      as: () => null,
+      grab: () => () => 'someVal', // If both return falsey then the grabs won't be run
+    },
+  },
+  failed(WrappedBasicComponent) {
+    return <WrappedBasicComponent {...this.props}>Failed</WrappedBasicComponent>;
+  },
+});
+
 export const DelayedFetchContainer = createContainer(BasicComponent, {
   fetch: {
     first: {

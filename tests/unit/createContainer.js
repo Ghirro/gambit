@@ -22,6 +22,8 @@ import {
   BadGrabContainer,
   DelayedFetchContainer,
   AbortFetchContainer,
+  BadGrabReturnContainer,
+  FineGrabReturnContainer,
 } from '../lib/containers';
 
 
@@ -159,5 +161,29 @@ describe('Container', () => {
     );
     const [component] = scryRenderedComponentsWithType(dom, MethodCounterComponent);
     expect(component.props.increment).to.be.a('function');
+  });
+
+  it('should not fail when a grab returns false', async () => {
+    const dom = renderIntoDocument(
+      <TestRoot>
+        <FineGrabReturnContainer />
+      </TestRoot>
+    );
+
+    await new Promise(resolve => setTimeout(resolve, 0));
+    const div = findRenderedDOMComponentWithTag(dom, 'div');
+    expect(div.textContent).not.to.equal('Failed');
+  });
+
+  it('should fail when a grab returns undefined', async () => {
+    const dom = renderIntoDocument(
+      <TestRoot>
+        <BadGrabReturnContainer />
+      </TestRoot>
+    );
+
+    await new Promise(resolve => setTimeout(resolve, 0));
+    const div = findRenderedDOMComponentWithTag(dom, 'div');
+    expect(div.textContent).to.equal('Failed');
   });
 });

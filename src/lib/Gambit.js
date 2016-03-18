@@ -75,7 +75,7 @@ export default function containerFactory(
         .then(object => {
           Object.keys(object).forEach(key => {
             invariant(
-              object[key],
+              object[key] !== undefined,
               badGrabReturn(name, key, object[key]),
             );
           });
@@ -85,7 +85,8 @@ export default function containerFactory(
           });
            // Workaround for https://github.com/petkaantonov/bluebird/issues/846
           return null;
-        }, err => {
+        })
+        .catch(err => {
           this.setState({
             loadingFetches: this.state.loadingFetches - 1,
             errored: err,
