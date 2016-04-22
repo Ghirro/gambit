@@ -10,6 +10,32 @@ npm install gambit
 
 Or check out the [example app](https://github.com/Ghirro/gambit-github-example)
 
+## Upgrading to v1.* from v0.*
+
+There is a breaking change in v1.0 surrounding actionBlockers (hasNotBeenCalled and hasNotBeenCalledIn).
+
+Previously `hasNotBeenCalled` would only update when an action successfully returned. This meant if you had multiple containers using the same action being loaded at the same time, they would all fire. Now the behaviour of `hasNotBeenCalled` and `hasNotBeenCalledIn` has nothing to do with success of the call, they will block an action if it has been fired at all.
+
+The previous behaviour (only blocking on success) is now available with actionBlockers `hasNotSucceeded` and `hasNotSucceededIn`.
+
+You can simply replace:
+
+```javascript
+fetch: {
+  as: state => state.user.get('favourites'),
+  grab: dispatch => asVal => dispatch(getFavourites({}, hasNotBeenCalled)),
+}
+```
+
+with
+
+```javascript
+fetch: {
+  as: state => state.user.get('favourites'),
+  grab: dispatch => asVal => dispatch(getFavourites({}, hasNotSucceeded)),
+}
+```
+
 ## Why?
 
 Redux is a fantastic tool for managing state within a javascript application, however it is naturally a low-level interface. This is great but when building API driven applications, it can become quite boilerplate intensive and the APIs for connecting a component to a store and then fetching data can lead to quite a lot of repetition.
