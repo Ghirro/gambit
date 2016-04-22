@@ -8,4 +8,9 @@ export default createReducer({
       action,
     }, prevState) => prevState.set(action, Date.now()),
   }],
+  lastSucceeded: [new Map({}), {
+    [Constants.ACTION_SUCCEEDED]: ({
+      action,
+    }, prevState) => prevState.set(action, Date.now()),
+  }],
 }, { hearGeneral: true });

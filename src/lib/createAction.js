@@ -69,7 +69,7 @@ export function createStagedAction(
     const calls = state().gambit;
     if (calls) {
       const shouldGoAhead = actionBlocker ?
-        actionBlocker(calls.getIn(['lastCalled', madeId])) :
+        actionBlocker(calls.getIn(['lastCalled', madeId]), calls.getIn(['lastSucceeded', madeId])) :
         true;
 
       if (!shouldGoAhead) {
@@ -81,6 +81,10 @@ export function createStagedAction(
       type: `${constant}_STARTING`,
       ...namedArguments,
     });
+    dispatch({
+      type: GeneralConstants.ACTION_CALLED,
+      action: madeId,
+    });
 
     if (postStart) { postStart(dispatch, namedArguments); }
 
@@ -88,7 +92,7 @@ export function createStagedAction(
       .then(({ body }) => {
         return Promise.all([
           dispatch({
-            type: GeneralConstants.ACTION_CALLED,
+            type: GeneralConstants.ACTION_SUCCEEDED,
             action: madeId,
           }),
           dispatch({
