@@ -1,6 +1,8 @@
 import {
   hasNotBeenCalled,
   hasNotBeenCalledIn,
+  hasNotSucceeded,
+  hasNotSucceededIn,
 } from './lib/actionBlockers';
 import createMiddleware from './lib/apiMiddleware';
 import {
@@ -18,6 +20,8 @@ import HttpError from './lib/HttpError';
 export {
   hasNotBeenCalled,
   hasNotBeenCalledIn,
+  hasNotSucceeded,
+  hasNotSucceededIn,
   createMiddleware,
   createStagedAction,
   createSimpleAction,
