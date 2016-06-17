@@ -78,17 +78,22 @@ export function createStagedAction(
     }
 
     dispatch({
-      type: `${constant}_STARTING`,
-      ...namedArguments,
-    });
-    dispatch({
       type: GeneralConstants.ACTION_CALLED,
       action: madeId,
     });
+    dispatch({
+      ...namedArguments,
+      type: `${constant}_STARTING`,
+    });
 
-    if (postStart) { postStart(dispatch, namedArguments); }
 
-    return methodToCall(namedArguments)
+    let start = Promise.resolve();
+    if (postStart) { start = postStart(dispatch, namedArguments); }
+
+    return start
+      .then(() => {
+        return methodToCall(namedArguments);
+      })
       .then(({ body }) => {
         return Promise.all([
           dispatch({
@@ -96,9 +101,9 @@ export function createStagedAction(
             action: madeId,
           }),
           dispatch({
+            ...namedArguments,
             type: `${constant}_DONE`,
             body,
-            ...namedArguments,
           }),
         ]);
       })
@@ -111,9 +116,9 @@ export function createStagedAction(
       })
       .catch(error => {
         dispatch({
+          ...namedArguments,
           type: `${constant}_FAILED`,
           response: error.response ? error.response.body : error,
-          ...namedArguments,
         });
         if (postFail) { postFail(dispatch, error, namedArguments); }
         throw new Error(error);
@@ -128,8 +133,8 @@ export function createSimpleAction(
   return (namedArguments = {}) => (api, dispatch) => {
     argumentsCheck(constant, namedArguments);
     return dispatch({
-      type: `${constant}_DONE`,
       ...namedArguments,
+      type: `${constant}_DONE`,
     });
   };
 }

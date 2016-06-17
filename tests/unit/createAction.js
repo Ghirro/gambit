@@ -100,6 +100,16 @@ describe('Creating Actions', () => {
       await dispatch(action({ id: 999 }));
     });
 
+    it('should maintain type even when type parameter is passed', async () => {
+      const action = createStagedAction(SOME_ACTION, api => api.findUser, {
+        postStart: (_, namedArguments) => new Promise(resolve => {
+          expect(last().type).to.equal(SOME_ACTION_STARTING);
+          resolve();
+        }),
+      });
+      return dispatch(action({ type: 'DOG_CHECKER' }));
+    });
+
     it('should call post done after done', async () => {
       const action = createStagedAction(SOME_ACTION, api => api.findUser, {
         postDone: () => new Promise(resolve => {
