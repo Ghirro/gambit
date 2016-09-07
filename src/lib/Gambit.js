@@ -118,7 +118,7 @@ export default function containerFactory(
         }
         throw new Error(errored);
       }
-      return <div />;
+      return null;
     }
   }
 
