@@ -1,6 +1,6 @@
 {
   "name": "gambit",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "A hyper-thin library to help building API driven redux apps",
   "main": "dist/index.js",
   "scripts": {
