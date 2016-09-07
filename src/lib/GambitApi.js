@@ -3,7 +3,6 @@ import mapValues from 'lodash/mapValues';
 import HttpError from './HttpError';
 import invariant from 'invariant';
 import isPlainObject from 'lodash/isPlainObject';
-import url from 'url';
 
 import {
   badApiArgs,
@@ -41,7 +40,10 @@ export default class GambitApi {
       ...rest.headers,
       ...this.extraHeaders,
     };
-    apiUrl = url.resolve(this.baseUrl, apiUrl);
+    apiUrl = this.baseUrl.slice(-1) === '/'
+      ? `${this.baseUrl}${apiUrl}`
+      : (apiUrl.slice(0) === '/') ? `${this.baseUrl}${apiUrl}` : `${this.baseUrl}/${apiUrl}`;
+
     const response = await this.fetch(apiUrl, rest);
     return { body: response };
   };
