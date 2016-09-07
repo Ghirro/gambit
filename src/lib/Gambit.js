@@ -34,6 +34,10 @@ export default function containerFactory(
   );
 
   class Gambit extends React.Component {
+    static contextTypes = {
+      store: React.PropTypes.object,
+    };
+
     constructor(props, context) {
       super(props, context);
       this.state = {
