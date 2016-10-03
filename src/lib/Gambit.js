@@ -1,4 +1,6 @@
+require('./reactErrorPatch.js');
 import React from 'react';
+import PropTypes from 'prop-types';
 import forIn from 'lodash/forIn';
 import Promise from 'bluebird';
 import invariant from 'invariant';
@@ -18,6 +20,8 @@ export default function containerFactory(
     done,
     pending,
     failed,
+    strictMode,
+    logging,
   },
 ) {
   invariant(
@@ -36,7 +40,7 @@ export default function containerFactory(
 
   class Gambit extends React.Component {
     static contextTypes = {
-      store: React.PropTypes.object,
+      store: PropTypes.object,
     };
 
     constructor(props, context) {
@@ -53,8 +57,16 @@ export default function containerFactory(
 
       forIn(fetch, (value, key) => {
         if (value.grab) {
-          const grab = value.grab(props.dispatch, props);
-          const as = value.as(store, props);
+          let grab,
+            as;
+
+          try {
+            grab = value.grab(props.dispatch, props);
+            as = value.as(store, props);
+          } catch (e) {
+            console.warn(`Error in ${name}`, e);
+          }
+
           invariant(
             typeof grab === 'function',
             badGrab(name, key, grab),

@@ -43,3 +43,23 @@ export const badGrabReturn = (name, key, val) => {
 export const badApiArgs = (method) => {
   return `Argument passed to ${method.name} must be an object with named properties`;
 };
+
+export const integerAsString = (type, argument, key, allArgs) => {
+  return `When ${type === 'set' ? 'setting' : 'getting'} a field on a reducer, if the field name can be an integer, it must be. You used "${argument}" in ${allArgs.length > 1 ? allArgs.join('.') : ''} ${key}.`;
+};
+
+export const valueUndefined = (setKey, key) => {
+  return `Setting ${setKey.join('.')} as undefined is not permissable in strictMode for ${key}`;
+};
+
+export const keyUndefined = (setKey, key) => {
+  return `Cannot use undefined as a key (full chain: ${setKey.join('.')}) on ${key} whilst in strictMode`;
+};
+
+export const keyIsArray = (setKey, key, type) => {
+  return `Cannot use ${type === 'set' ? 'set' : 'get'} with an Array key for ${key}. Used ${setKey.join('.')}, please use ${type === 'set' ? 'setIn' : 'getIn'}`;
+};
+
+export const keyIsntArray = (setKey, key, type) => {
+  return `Cannot use ${type === 'set' ? 'setIn' : 'getIn'} with a none array key for ${key}. Used ${setKey}, please use ${type === 'set' ? 'set' : 'get'}`;
+};

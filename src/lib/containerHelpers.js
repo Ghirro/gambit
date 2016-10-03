@@ -1,6 +1,8 @@
 import { connect } from 'react-redux';
 import forIn from 'lodash/forIn';
 import invariant from 'invariant';
+import GeneralConstants from './GeneralConstants';
+
 import {
   noFunctionAs,
 } from './dict';
@@ -26,6 +28,16 @@ function mergeProps(methods = {}, containerName) {
     forIn(methods, (value, key) => {
       otherMethods[key] = value(dispatch, megaProps);
     });
+
+    otherMethods.monitor = (id, props, state) => {
+      return dispatch({
+        type: GeneralConstants.MONITORED_VALUE_CHANGED,
+        id,
+        props,
+        state,
+      });
+    };
+
     return {
       ...megaProps,
       ...otherMethods,

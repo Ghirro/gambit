@@ -16,6 +16,7 @@ import createReducer from './lib/createReducer';
 import GambitApi from './lib/GambitApi';
 import gambitReducer from './lib/gambitReducer';
 import HttpError from './lib/HttpError';
+import GeneralConstants from './lib/GeneralConstants';
 
 export {
   hasNotBeenCalled,
@@ -32,4 +33,5 @@ export {
   GambitApi,
   gambitReducer,
   HttpError,
+  GeneralConstants,
 };
