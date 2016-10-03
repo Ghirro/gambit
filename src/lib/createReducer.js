@@ -5,7 +5,6 @@ import forIn from 'lodash/forIn';
 import Constants from './GeneralConstants';
 import wrapperCreate from './wrappedState';
 
-
 function handlePossibleImmutable(object) {
   if (!object) return [object];
   if (object.toJS) return ['IMMUTABLE', object.toJS()];
@@ -27,6 +26,7 @@ export default function manufactureReducer(
             constantPassed.indexOf('DONE') === -1 &&
             constantPassed.indexOf('FAILED') === -1 &&
             constantPassed.indexOf('STARTING') === -1 &&
+            !Constants[constantPassed] &&
             strictMode
           ) {
             const warn = console.warn;
