@@ -12,11 +12,18 @@ Or check out the [example app](https://github.com/Ghirro/gambit-github-example)
 
 ## Changelog
 
+### 2.0.0
+* Better react error messages
+
 ### 1.2.0
 * `logging: true` in reducer options now outputs a lot of information to console from your reducers
 * `strictMode: true` in reducer options prevents a lot of dumb mistakes: `state.user.set("1", { name: 'Mark' })` will warn you that 1 is a string.
 * Added a constant `GeneralConstants.MONITORED_VALUE_CHANGED` to allow for hooking in to contained components with debugging components
 * Using `reactErrorPatch.js` which shims render in React to make debugging of errors much easier.
+
+## Upgrading to v2.* from v1.*
+
+You need to [polyfill](https://github.com/GoogleChrome/proxy-polyfill) Proxy.
 
 
 ## Upgrading to v1.* from v0.*

@@ -1,4 +1,7 @@
-require('./reactErrorPatch.js');
+if (typeof document !== 'undefined') {
+  require('./reactErrorPatch.js');
+}
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import forIn from 'lodash/forIn';
