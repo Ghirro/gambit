@@ -109,7 +109,7 @@ export function createStagedAction(
       })
       .then(([actionCalled, doneVal]) => {
         if (postDone) {
-          return postDone(dispatch, doneVal, namedArguments)
+          return postDone(dispatch, doneVal, namedArguments, api)
             .then(() => doneVal);
         }
         return doneVal;
@@ -120,7 +120,7 @@ export function createStagedAction(
           type: `${constant}_FAILED`,
           response: error.response ? error.response.body : error,
         });
-        if (postFail) { postFail(dispatch, error, namedArguments); }
+        if (postFail) { postFail(dispatch, error, namedArguments, api); }
         throw new Error(error);
       });
   };
