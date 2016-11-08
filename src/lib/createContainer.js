@@ -11,6 +11,12 @@ export default function createContainer(
     failed,
   } = {}
 ) {
+  fetch = {
+    ...fetch,
+    debugHighlighted: {
+      as: state => state.gambit && state.gambit.get('highlightedComponents'),
+    },
+  };
   const Container = containerFactory(
     InnerComp,
     { fetch, methods, done, pending, failed }

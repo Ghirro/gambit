@@ -23,4 +23,13 @@ export default createReducer({
       state,
     })),
   }],
+  highlightedComponents: [new Map({}), {
+    [Constants.HIGHLIGHT_COMPONENT]: ({
+      id,
+      color,
+    }, state) => state.set(id, color),
+    [Constants.UNHIGHLIGHT_COMPONENT]: ({
+      id,
+    }, state) => state.delete(id),
+  }],
 }, { hearGeneral: true });
