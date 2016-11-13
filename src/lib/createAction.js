@@ -80,6 +80,7 @@ export function createStagedAction(
     dispatch({
       type: GeneralConstants.ACTION_CALLED,
       action: madeId,
+      namedArguments,
     });
     dispatch({
       ...namedArguments,
