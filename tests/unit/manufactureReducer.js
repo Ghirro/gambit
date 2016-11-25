@@ -61,4 +61,30 @@ describe('Manufacturing Reducers', () => {
     expect(ret.users.getIn(['usernames', 1])).to.equal('Jim');
     expect(ret.pets.petNames[1]).to.equal('fido');
   });
+
+  it('should reset the reducer when a reset action is called', () => {
+    const users = createReducer({
+      people: [[], {
+        ADD_PEOPLE: ({ id }, prev) => [...prev, id],
+      }],
+    }, { asImmutable: false, resetAction: ['LOGOUT'] });
+
+    const ret = users({}, {
+      type: 'ADD_PEOPLE', id: 1,
+    });
+
+    expect(ret.people).to.have.length(1);
+
+    const newRet = users(ret, {
+      type: 'NOTHING',
+    });
+
+    expect(newRet.people).to.have.length(1);
+
+    const finalRet = users(ret, {
+      type: 'LOGOUT',
+    });
+
+    expect(finalRet.people).to.have.length(0);
+  });
 });

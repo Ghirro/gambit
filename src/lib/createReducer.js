@@ -13,9 +13,19 @@ function handlePossibleImmutable(object) {
 
 export default function manufactureReducer(
   tree,
-  { hearGeneral = false, asImmutable = true, strictMode = false, logging = false } = {},
+  {
+    hearGeneral = false,
+    asImmutable = true,
+    strictMode = false,
+    logging = false,
+    resetAction = [],
+  } = {},
 ) {
   let reducers = asImmutable ? new Map({}) : {};
+
+  if (!Array.isArray(resetAction)) {
+    resetAction = [resetAction];
+  }
 
   if (strictMode) {
     forIn(tree, (value, key) => {
@@ -43,6 +53,10 @@ export default function manufactureReducer(
 
     const method = (prevState = defaultState, { type, ...rest }) => {
       if (type === Constants.ACTION_CALLED && !hearGeneral) return prevState;
+
+      if (resetAction.indexOf(type) !== -1) {
+        return defaultState;
+      }
 
       // NB: The way we do constant matching could be done better
       return Object.keys(innerMethods)

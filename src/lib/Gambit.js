@@ -3,7 +3,6 @@ if (typeof document !== 'undefined') {
 }
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import forIn from 'lodash/forIn';
 import Promise from 'bluebird';
 import invariant from 'invariant';
@@ -43,7 +42,7 @@ export default function containerFactory(
 
   class Gambit extends React.Component {
     static contextTypes = {
-      store: PropTypes.object,
+      store: React.PropTypes.object,
     };
 
     constructor(props, context) {
