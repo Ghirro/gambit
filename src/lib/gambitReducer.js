@@ -33,5 +33,5 @@ export default (opts = {}) => {
         id,
       }, state) => state.delete(id),
     }],
-  }, { hearGeneral: true, ...opts });
+  }, { ...opts, hearGeneral: true });
 };

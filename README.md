@@ -12,6 +12,9 @@ Or check out the [example app](https://github.com/Ghirro/gambit-github-example)
 
 ## Changelog
 
+### 3.0.0
+* Introduction of the ability to pass options to GeneralConstants
+
 ### 2.0.0
 * Better react error messages
 
@@ -20,6 +23,24 @@ Or check out the [example app](https://github.com/Ghirro/gambit-github-example)
 * `strictMode: true` in reducer options prevents a lot of dumb mistakes: `state.user.set("1", { name: 'Mark' })` will warn you that 1 is a string.
 * Added a constant `GeneralConstants.MONITORED_VALUE_CHANGED` to allow for hooking in to contained components with debugging components
 * Using `reactErrorPatch.js` which shims render in React to make debugging of errors much easier.
+
+## Upgrading to v3.* from v2.*
+
+gambitReducer is now a function that takes reducer options as it's first paramere
+
+```
+import { gambitReducer } from 'gambit';
+
+configureStore({ myReducer, gambitReducer });
+```
+
+Is now
+
+```
+import { gambitReducer } from 'gambit';
+
+configureStore({ myReducer, gambitReducer: gambitReducer({ resetAction: 'LOGOUT' }) });
+```
 
 ## Upgrading to v2.* from v1.*
 
