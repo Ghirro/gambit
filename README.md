@@ -39,7 +39,7 @@ Is now
 ```
 import { gambitReducer } from 'gambit';
 
-configureStore({ myReducer, gambitReducer: gambitReducer({ resetAction: 'LOGOUT' }) });
+configureStore({ myReducer, gambit: gambitReducer({ resetAction: 'LOGOUT' }) });
 ```
 
 ## Upgrading to v2.* from v1.*
