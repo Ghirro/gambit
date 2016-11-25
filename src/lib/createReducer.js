@@ -27,6 +27,8 @@ export default function manufactureReducer(
     resetAction = [resetAction];
   }
 
+  resetAction = resetAction.map(x => x.trim());
+
   if (strictMode) {
     forIn(tree, (value, key) => {
       const innerMethods = value[1];
@@ -54,7 +56,7 @@ export default function manufactureReducer(
     const method = (prevState = defaultState, { type, ...rest }) => {
       if (type === Constants.ACTION_CALLED && !hearGeneral) return prevState;
 
-      if (resetAction.indexOf(type) !== -1) {
+      if (resetAction.indexOf(type.trim()) !== -1) {
         return defaultState;
       }
 
