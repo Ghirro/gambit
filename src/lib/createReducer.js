@@ -71,14 +71,13 @@ export default function manufactureReducer(
 
           if (!doesMatch) return prev;
 
-          const log = console.log;
           if (logging) {
             const styles = 'background: blue; color: white; font-size: 14px';
-            log(' ');
-            log('%c ----', 'color: blue');
-            log(`%c "${key}": ${matchingConstants}`, styles);
-            log(rest);
-            log('Starting as: ', ...handlePossibleImmutable(prevState));
+            console.log(' ');
+            console.log('%c ----', 'color: blue');
+            console.log(`%c "${key}": ${matchingConstants}`, styles);
+            console.log(rest);
+            console.log('Starting as: ', ...handlePossibleImmutable(prevState));
           }
 
           const stateObj = (strictMode || logging) ?
@@ -89,9 +88,9 @@ export default function manufactureReducer(
 
 
           if (logging) {
-            log('Ending as: ', ...handlePossibleImmutable(resp));
-            log('%c ----', 'color: blue');
-            log(' ');
+            console.log('Ending as: ', ...handlePossibleImmutable(resp));
+            console.log('%c ----', 'color: blue');
+            console.log(' ');
           }
 
           return resp;
