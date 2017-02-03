@@ -118,7 +118,7 @@ export default function wrappedStateFactory(stateObj, { key, strictMode }) {
     },
   };
 
-  if (Map.isMap(stateObj) && !stateObj.isProxied && Proxy) {
+  if (Map.isMap(stateObj) && !stateObj.isProxied && typeof Proxy !== 'undefined') {
     return new Proxy(stateObj, handler);
   }
   return stateObj;
