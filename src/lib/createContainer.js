@@ -6,9 +6,11 @@ export default function createContainer(
   {
     fetch = {},
     methods = {},
+    quickMethods = {},
     done,
     pending,
     failed,
+    propTransform,
   } = {}
 ) {
   fetch = {
@@ -17,9 +19,22 @@ export default function createContainer(
       as: state => state.gambit && state.gambit.get('highlightedComponents'),
     },
   };
+
+  methods = {
+    ...Object.keys(quickMethods)
+      .reduce((prev, curr) => {
+        const f = quickMethods[curr];
+        return {
+          ...prev,
+          [curr]: dispatch => args => dispatch(f(args)),
+        };
+      }, {}),
+    ...methods,
+  };
+
   const Container = containerFactory(
     InnerComp,
-    { fetch, methods, done, pending, failed }
+    { fetch, methods, done, pending, failed, propTransform }
   );
   return connect()(Container);
 }

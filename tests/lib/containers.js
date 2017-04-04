@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types, react/prefer-stateless-function */
 import React from 'react';
 import { createContainer } from '../../src';
+import { expect } from 'chai';
 
 export class CounterComponent extends React.Component {
   static propTypes = {
@@ -128,5 +129,36 @@ export const AbortFetchContainer = createContainer(BasicComponent, {
   },
   failed(WrappedBasicComponent) {
     return <WrappedBasicComponent {...this.props}>Failed</WrappedBasicComponent>;
+  },
+});
+
+const sampleMethod = () => {
+};
+
+export class QuickMethodComponent extends React.Component {
+  render() {
+    return <div />;
+  }
+}
+
+export const QuickMethodContainer = createContainer(QuickMethodComponent, {
+  quickMethods: {
+    sampleMethod,
+  },
+});
+
+
+export const PropsParseContainer = createContainer(QuickMethodComponent, {
+  propTransform: (props) => {
+    return {
+      ...props,
+      id: parseInt(props.id, 10),
+    };
+  },
+
+  fetch: {
+    integer: {
+      as: (state, props) => expect(props.id).to.be.a('Number'),
+    },
   },
 });

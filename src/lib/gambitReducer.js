@@ -24,6 +24,38 @@ export default (opts = {}) => {
         state,
       })),
     }],
+    pending: [new Map({}), {
+      [Constants.ACTION_CALLED]: ({
+        cycleId,
+      }, prevState) => {
+        if (!cycleId) return prevState;
+        return prevState.set(cycleId, true);
+      },
+      [Constants.ACTION_SUCCEEDED + ' ' + Constants.ACTION_FAILED]: ({
+        cycleId,
+      }, prevState) => {
+        if (!cycleId) return prevState;
+        return prevState.set(cycleId, false);
+      },
+    }],
+    failed: [new Map({}), {
+      [Constants.ACTION_CALLED + ' ' + Constants.ACTION_SUCCEEDED]: ({
+        cycleId,
+      }, prevState) => {
+        if (!cycleId) return prevState;
+        return prevState.set(cycleId, null);
+      },
+      [Constants.ACTION_FAILED]: ({
+        cycleId,
+        ...rest,
+      }, prevState) => {
+        if (!cycleId) return prevState;
+        return prevState.set(
+          cycleId,
+          opts.errorParser ? opts.errorParser({ cycleId, ...rest }) : true,
+        );
+      },
+    }],
     highlightedComponents: [new Map({}), {
       [Constants.HIGHLIGHT_COMPONENT]: ({
         id,

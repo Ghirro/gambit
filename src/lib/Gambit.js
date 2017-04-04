@@ -22,6 +22,7 @@ export default function containerFactory(
     done,
     pending,
     failed,
+    propTransform,
     strictMode,
     logging,
   },
@@ -54,6 +55,10 @@ export default function containerFactory(
     }
 
     runFetches(props) {
+      if (propTransform) {
+        props = propTransform(props);
+      }
+
       const promiseObj = {};
       const store = this.context.store.getState();
 
@@ -119,13 +124,15 @@ export default function containerFactory(
 
     render() {
       const { loadingFetches, errored } = this.state;
+      const parseProps = propTransform ? propTransform(this.props) : this.props;
+
       if (loadingFetches !== 0 && pending) {
         return pending.call(this, WrappedComponent);
       } else if (loadingFetches === 0 && !errored) {
         if (done) {
           return done.call(this, WrappedComponent);
         }
-        return <WrappedComponent {...this.props} />;
+        return <WrappedComponent {...parseProps} />;
       } else if (loadingFetches === 0 && errored) {
         if (failed) {
           console.warn(`Failed in ${name}: ${errored}`);

@@ -44,17 +44,22 @@ export function createStagedAction(
     postStart,
     postFail,
     id = constant,
+    cycleId = false,
   } = {},
 ) {
   if (this && this.constants) constant = this.constants[constant];
 
   return (namedArguments = {}, actionBlocker) => (api, dispatch, state) => {
     const methodToCall = methodFinder(api);
-    argumentsCheck(constant, namedArguments, methodToCall);
+    argumentsCheck(constant, namedArguments, actionBlocker, methodToCall);
 
     const madeId = typeof id === 'function' ?
       id(constant, namedArguments) :
       id;
+
+    const madeCycleId = typeof cycleId === 'function' ?
+      cycleId(constant, namedArguments) :
+      cycleId;
 
     invariant(
       madeId.indexOf('undefined') === -1,
@@ -69,7 +74,11 @@ export function createStagedAction(
     const calls = state().gambit;
     if (calls) {
       const shouldGoAhead = actionBlocker ?
-        actionBlocker(calls.getIn(['lastCalled', madeId]), calls.getIn(['lastSucceeded', madeId])) :
+        actionBlocker(
+          calls.getIn(['lastCalled', madeId]),
+          calls.getIn(['lastSucceeded', madeId]),
+          calls
+        ) :
         true;
 
       if (!shouldGoAhead) {
@@ -81,6 +90,7 @@ export function createStagedAction(
       type: GeneralConstants.ACTION_CALLED,
       action: madeId,
       namedArguments,
+      cycleId: madeCycleId,
     });
     dispatch({
       ...namedArguments,
@@ -100,6 +110,7 @@ export function createStagedAction(
           dispatch({
             type: GeneralConstants.ACTION_SUCCEEDED,
             action: madeId,
+            cycleId: madeCycleId,
           }),
           dispatch({
             ...namedArguments,
@@ -116,6 +127,12 @@ export function createStagedAction(
         return doneVal;
       })
       .catch(error => {
+        dispatch({
+          type: GeneralConstants.ACTION_FAILED,
+          action: madeId,
+          cycleId: madeCycleId,
+          response: error.response ? error.response.body : error,
+        });
         dispatch({
           ...namedArguments,
           type: `${constant}_FAILED`,

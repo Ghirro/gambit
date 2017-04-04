@@ -5,6 +5,7 @@ import Promise from 'bluebird';
 import {
   hasNotBeenCalled,
   hasNotBeenCalledIn,
+  dependableMatrix,
   createStagedAction,
   createSimpleAction,
   bindCreators,
@@ -12,6 +13,7 @@ import {
 
 
 import dispatchCreator from '../lib/dispatch';
+import asyncThrow from '../lib/asyncThrow';
 
 const fakeBody = { body: { id: 1 } };
 const fakeError = { response: { body: 'You failed' } };
@@ -70,11 +72,11 @@ describe('Creating Actions', () => {
       ).to.throw(Error);
     });
 
-    it('should be a dick if you give an invalid api search', () => {
+    it('should be a dick if you give an invalid api search', async () => {
       const action = createStagedAction(SOME_ACTION, api => api.imNotHere);
-      expect(
-        () => dispatch(action())
-      ).to.throw(Error);
+      await asyncThrow(() => {
+        return dispatch(action());
+      });
     });
   });
 
@@ -239,6 +241,58 @@ describe('Creating Actions', () => {
         await dispatch(idAction({ userId: 2 }, hasNotBeenCalled));
         expect(last().type).to.equal(SOME_ACTION_DONE);
       });
+    });
+  });
+
+  describe('Dependable Matrix', async () => {
+    const SOME_OTHER_ACTION = 'SOME_OTHER_ACTION';
+
+    const firstAction = createStagedAction(
+      SOME_ACTION,
+      () => () => true,
+    );
+
+    const secondAction = createStagedAction(
+      SOME_OTHER_ACTION,
+      () => () => true,
+    );
+
+    it('should call the method if the resetting action has been called', async () => {
+      const matrix = dependableMatrix(
+        [SOME_OTHER_ACTION]
+      );
+
+      await dispatch(firstAction({}, matrix));
+      await dispatch(secondAction({}));
+      await dispatch(firstAction({}, matrix));
+
+      expect(last().type).to.equal(SOME_ACTION_DONE);
+    });
+
+    it('should call  if the reset action has not been called but no blocker', async () => {
+      const matrix = dependableMatrix(
+        [SOME_OTHER_ACTION]
+      );
+
+      await dispatch(firstAction({}, matrix));
+      expect(last().type).to.equal(SOME_ACTION_DONE);
+
+      await dispatch(firstAction({}, matrix));
+      expect(last().type).to.equal(SOME_ACTION_DONE);
+    });
+
+    it('shouldnt call if the reset action has not been called and otherwise blocker', async () => {
+      const matrix = dependableMatrix(
+        [SOME_OTHER_ACTION],
+        hasNotBeenCalled,
+      );
+
+      await dispatch(firstAction({}, matrix));
+      expect(last().type).to.equal(SOME_ACTION_DONE);
+      clearStack();
+
+      await dispatch(firstAction({}, matrix));
+      expect(last()).to.equal(undefined);
     });
   });
 });

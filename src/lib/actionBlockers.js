@@ -1,3 +1,18 @@
+export function dependableMatrix(
+  resettingActions = [],
+  standardBlocker = () => true,
+) {
+  return (foundCalled, foundSucceeded, calls) => {
+    const hasResettedAction = resettingActions
+      .some(actionId => {
+        return calls.getIn(['lastCalled', actionId]) > foundSucceeded;
+      });
+
+    if (hasResettedAction) return false;
+
+    return standardBlocker(foundCalled, foundSucceeded);
+  };
+}
 export function hasNotBeenCalled(foundCalled) {
   return !foundCalled;
 }

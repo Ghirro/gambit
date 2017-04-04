@@ -12,6 +12,12 @@ Or check out the [example app](https://github.com/Ghirro/gambit-github-example)
 
 ## Changelog
 
+### 3.1.0
+* Introduction of cycleIds
+* Introduction of quickMethods
+* Introduction of propTransform
+* Introduction of dependableMatrix
+
 ### 3.0.0
 * Introduction of the ability to pass options to GeneralConstants
 

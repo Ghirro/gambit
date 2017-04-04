@@ -1,6 +1,6 @@
 {
   "name": "gambit",
-  "version": "3.0.3",
+  "version": "3.1.0",
   "description": "A hyper-thin library to help building API driven redux apps",
   "main": "dist/index.js",
   "scripts": {
@@ -42,11 +42,13 @@
     "immutable": "3.*",
     "invariant": "2.*",
     "lodash": "4.6.*",
+    "mocha-sinon": "^2.0.0",
     "prop-types": "^0.2.0",
     "proxy-polyfill": "^0.1.6",
     "react": "^15.3.1",
     "react-prop-types": "^0.4.0",
     "react-redux": "4.*",
-    "redux": "3.*"
+    "redux": "3.*",
+    "sinon": "^2.1.0"
   }
 }

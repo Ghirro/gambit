@@ -3,6 +3,7 @@ import {
   hasNotBeenCalledIn,
   hasNotSucceeded,
   hasNotSucceededIn,
+  dependableMatrix,
 } from './lib/actionBlockers';
 import createMiddleware from './lib/apiMiddleware';
 import {
@@ -34,4 +35,5 @@ export {
   gambitReducer,
   HttpError,
   GeneralConstants,
+  dependableMatrix,
 };

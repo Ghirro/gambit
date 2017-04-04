@@ -24,8 +24,12 @@ import {
   AbortFetchContainer,
   BadGrabReturnContainer,
   FineGrabReturnContainer,
+  QuickMethodComponent,
+  QuickMethodContainer,
+  PropsParseContainer,
 } from '../lib/containers';
 
+import asyncThrow from '../lib/asyncThrow';
 
 describe('Container', () => {
   it('should render straight away with zero fetches', () => {
@@ -78,15 +82,6 @@ describe('Container', () => {
     Simulate.click(div);
     const [component] = scryRenderedComponentsWithType(dom, MethodCounterComponent);
     expect(component.props.counter).to.equal(1);
-  });
-
-  it('should require as to be a function', () => {
-    const doRender = () => renderIntoDocument(
-      <TestRoot>
-        <BadAsContainer />
-      </TestRoot>
-    );
-    expect(doRender).to.throw(Error);
   });
 
   it('should wait until all fetches have returned before rendering done', async function () {
@@ -185,5 +180,27 @@ describe('Container', () => {
     await new Promise(resolve => setTimeout(resolve, 0));
     const div = findRenderedDOMComponentWithTag(dom, 'div');
     expect(div.textContent).to.equal('Failed');
+  });
+
+  it('should provide the contained component with quick methods', () => {
+    const dom = renderIntoDocument(
+      <TestRoot>
+        <QuickMethodContainer />
+      </TestRoot>
+    );
+
+    const [component] = scryRenderedComponentsWithType(dom, QuickMethodComponent);
+    expect(component.props.sampleMethod).to.be.a('function');
+  });
+
+  it('should have a propTransform that works', () => {
+    const dom = renderIntoDocument(
+      <TestRoot>
+        <PropsParseContainer id="1" />
+      </TestRoot>
+    );
+
+    const [component] = scryRenderedComponentsWithType(dom, QuickMethodComponent);
+    expect(component.props.id).to.be.a('Number');
   });
 });
