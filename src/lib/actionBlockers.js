@@ -8,7 +8,7 @@ export function dependableMatrix(
         return calls.getIn(['lastCalled', actionId]) > foundSucceeded;
       });
 
-    if (hasResettedAction) return false;
+    if (hasResettedAction) return true;
 
     return standardBlocker(foundCalled, foundSucceeded);
   };
