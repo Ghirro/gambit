@@ -51,6 +51,7 @@ export default function containerFactory(
       this.state = {
         loadingFetches: 0,
         errored: false,
+        handlingRefreshGrab: [],
       };
     }
 
