@@ -54,7 +54,7 @@ export default function containerFactory(
       };
     }
 
-    runFetches(props, fetchesToRun) {
+    runFetches(props, fetchesToRun, cb = () => {}) {
       if (propTransform) {
         props = propTransform(props);
       }
@@ -103,7 +103,7 @@ export default function containerFactory(
           this.setState({
             loadingFetches: this.state.loadingFetches - 1,
             errored: false,
-          });
+          }, cb);
            // Workaround for https://github.com/petkaantonov/bluebird/issues/846
           return null;
         })
@@ -111,7 +111,7 @@ export default function containerFactory(
           this.setState({
             loadingFetches: this.state.loadingFetches - 1,
             errored: err,
-          });
+          }, cb);
         });
     }
 
@@ -137,9 +137,22 @@ export default function containerFactory(
           }
 
           if (
-            refreshGrabInResponse.indexOf(state.gambit.get('lastAction')) !== -1
+            (refreshGrabInResponse.indexOf(state.gambit.get('lastAction')) !== -1) &&
+            this.state.handlingRefreshGrab.indexOf(key) === -1
           ) {
-            return this.runFetches(this.props, { [key]: value });
+            return this.setState({
+              handlingRefreshGrab: [...this.state.handlingRefreshGrab, key],
+            }, () => {
+              return this.runFetches(
+                this.props,
+                { [key]: value },
+                () => {
+                  this.setState({
+                    handlingRefreshGrab: this.state.handlingRefreshGrab.filter(x => x !== key),
+                  });
+                },
+              );
+            });
           }
 
           return null;
