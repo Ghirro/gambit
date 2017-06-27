@@ -2,6 +2,8 @@
 /* eslint-disable react/prop-types, react/prefer-stateless-function */
 import React from 'react';
 import { expect } from 'chai';
+import sinon from 'sinon';
+
 import {
   renderIntoDocument,
   findRenderedDOMComponentWithTag,
@@ -27,6 +29,7 @@ import {
   QuickMethodComponent,
   QuickMethodContainer,
   PropsParseContainer,
+  ReGrabContainer,
 } from '../lib/containers';
 
 import asyncThrow from '../lib/asyncThrow';
@@ -202,5 +205,21 @@ describe('Container', () => {
 
     const [component] = scryRenderedComponentsWithType(dom, QuickMethodComponent);
     expect(component.props.id).to.be.a('Number');
+  });
+
+  it('should allow reGrab', async () => {
+    const testFn = sinon.spy();
+
+    const dom = renderIntoDocument(
+      <TestRoot>
+        <ReGrabContainer
+          fn={testFn}
+        />
+      </TestRoot>
+    );
+
+    scryRenderedComponentsWithType(dom, QuickMethodComponent);
+    await new Promise(resolve => setTimeout(resolve, 100));
+    expect(testFn.calledTwice).to.equal(true);
   });
 });

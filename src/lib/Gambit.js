@@ -54,7 +54,7 @@ export default function containerFactory(
       };
     }
 
-    runFetches(props) {
+    runFetches(props, fetchesToRun) {
       if (propTransform) {
         props = propTransform(props);
       }
@@ -62,7 +62,7 @@ export default function containerFactory(
       const promiseObj = {};
       const store = this.context.store.getState();
 
-      forIn(fetch, (value, key) => {
+      forIn(fetchesToRun, (value, key) => {
         if (value.grab) {
           let grab,
             as;
@@ -78,6 +78,7 @@ export default function containerFactory(
             typeof grab === 'function',
             badGrab(name, key, grab),
           );
+
           promiseObj[key] = grab(as);
         }
       });
@@ -115,11 +116,39 @@ export default function containerFactory(
     }
 
     componentWillMount() {
-      this.runFetches(this.props);
+      const { store } = this.context;
+
+      this.runFetches(this.props, fetch);
+
+      // We have refreshGrabInResponse
+      // because when a component has a small view into a larger data set (i.e. between some dates)
+      // it's generally the only part of the application that knows what view it has and so
+      // it's best place to re-run the grab function that provides its data.
+      store.subscribe((...args) => {
+        const state = store.getState();
+
+        forIn(fetch, (value, key) => {
+          let { refreshGrabInResponse } = value;
+          if (!refreshGrabInResponse) return null;
+
+          if (typeof refreshGrabInResponse === 'function') {
+            const parseProps = propTransform ? propTransform(this.props) : this.props;
+            refreshGrabInResponse = refreshGrabInResponse(state, parseProps);
+          }
+
+          if (
+            refreshGrabInResponse.indexOf(state.gambit.get('lastAction')) !== -1
+          ) {
+            return this.runFetches(this.props, { [key]: value });
+          }
+
+          return null;
+        });
+      });
     }
 
     componentWillReceiveProps(nextProps) {
-      this.runFetches(nextProps);
+      this.runFetches(nextProps, fetch);
     }
 
     render() {

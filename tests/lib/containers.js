@@ -162,3 +162,32 @@ export const PropsParseContainer = createContainer(QuickMethodComponent, {
     },
   },
 });
+
+class TriggerStateChangeComponent extends React.Component {
+  componentDidMount() {
+    if (this.props.count < 1) {
+      this.props.increment();
+    }
+  }
+
+  render() {
+    return <div />;
+  }
+}
+
+export const ReGrabContainer = createContainer(TriggerStateChangeComponent, {
+  fetch: {
+    count: {
+      as: state => state.refreshTestCounter,
+      grab: (dispatch, props) => () => {
+        return props.fn();
+      },
+      refreshGrabInResponse: ['REFRESH_TEST_INCREMENT'],
+    },
+  },
+  methods: {
+    increment: dispatch => () => {
+      dispatch({ type: 'REFRESH_TEST_INCREMENT' });
+    },
+  },
+});

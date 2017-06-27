@@ -4,6 +4,11 @@ import Constants from './GeneralConstants';
 
 export default (opts = {}) => {
   return createReducer({
+    lastAction: [null, {
+      [Constants.ACTION_CALLED]: ({
+        action,
+      }) => action,
+    }],
     lastCalled: [new Map({}), {
       [Constants.ACTION_CALLED]: ({
         action,

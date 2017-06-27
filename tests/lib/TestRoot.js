@@ -3,17 +3,35 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 
-const store = createStore((prevState = { counter: 0 }, action) => {
+import { Map } from 'immutable';
+
+const initialState = {
+  counter: 0,
+  refreshTestCounter: 0,
+  gambit: new Map({
+    lastCalled: null,
+  }),
+};
+
+const store = createStore((prevState = initialState, action) => {
   switch (action.type) {
     case 'INCREMENT':
       return {
         ...prevState,
         counter: prevState.counter + 1,
+        gambit: prevState.gambit.set('lastAction', 'INCREMENT'),
       };
     case 'DECREMENT':
       return {
         ...prevState,
         counter: prevState.counter - 1,
+        gambit: prevState.gambit.set('lastAction', 'DECREMENT'),
+      };
+    case 'REFRESH_TEST_INCREMENT':
+      return {
+        ...prevState,
+        refreshTestCounter: prevState.refreshTestCounter + 1,
+        gambit: prevState.gambit.set('lastAction', 'REFRESH_TEST_INCREMENT'),
       };
     default:
       return prevState;
