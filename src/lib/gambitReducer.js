@@ -5,7 +5,7 @@ import Constants from './GeneralConstants';
 export default (opts = {}) => {
   return createReducer({
     lastAction: [null, {
-      [Constants.ACTION_CALLED]: ({
+      [Constants.ACTION_SUCCEEDED]: ({
         action,
       }) => action,
     }],
